@@ -3,7 +3,7 @@ class DatabaseManager {
   constructor() {
     this.currentUser = null;
     this.userId = null;
-    this.apiBaseUrl = 'http://localhost:3000/api';
+    this.apiBaseUrl = 'https://fqclock.top/api';
   }
 
   // 设置当前用户
@@ -165,5 +165,6 @@ class DatabaseManager {
 
 // 创建数据库管理器实例
 const dbManager = new DatabaseManager();
+
 
 export default dbManager;
