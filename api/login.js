@@ -1,0 +1,30 @@
+// api/login.js
+import { Pool } from 'pg';
+
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false }
+});
+
+export default async function handler(req, res) {
+  if (req.method !== 'POST') return res.status(405).end();
+
+  const { username } = req.body;
+  if (!username?.trim()) {
+    return res.status(400).json({ success: false, message: '用户名不能为空' });
+  }
+
+  try {
+    const { rows: [user] } = await pool.query(
+      `INSERT INTO users (username)
+       VALUES ($1)
+       ON CONFLICT (username) DO UPDATE SET username=$1
+       RETURNING id, username`,
+      [username.trim()]
+    );
+    res.json({ success: true, user });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: '服务器错误' });
+  }
+}
